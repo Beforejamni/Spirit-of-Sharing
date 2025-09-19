@@ -71,7 +71,6 @@ jobs:
             --head "$HEAD" \
             --title "Auto PR: $HEAD -> $BASE" \
             --body "Auto-generated PR for $HEAD" \
-            --label automerge
 
             PR_NUMBER=$(gh pr list --head "$HEAD" --base "$BASE" --state open --json number --jq '.[0].number')
           fi
