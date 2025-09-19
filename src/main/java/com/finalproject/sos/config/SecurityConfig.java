@@ -1,4 +1,6 @@
 package com.finalproject.sos.config;
 
+
+//ruleSet 생성을 위한 test
 public class SecurityConfig {
 }
