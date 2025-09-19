@@ -1,5 +1,5 @@
 package com.finalproject.sos.config;
 
-//ruleSet test
+//ruleSet test2
 public class SecurityConfig {
 }
