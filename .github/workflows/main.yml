@@ -49,6 +49,7 @@ jobs:
             **/build/test-results/test
 
       - name: Create PR not exists
+        if: ${{ gitbub.event_name == 'push' }}
         id: create_pr
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -78,7 +79,7 @@ jobs:
           echo "PR_NUMBER=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: Enable PR auto-merge
-        if: ${{ steps.create_pr.outputs.PR_NUMBER != '' }}
+        if: ${{ gitbub.event_name == 'push' && steps.create_pr.outputs.PR_NUMBER != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
