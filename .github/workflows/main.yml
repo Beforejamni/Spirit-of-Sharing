@@ -52,7 +52,7 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         id: create_pr
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PR_CREATOR_TOKEN }}
         run: |
           set -e
           HEAD="${GITHUB_REF_NAME}"
@@ -80,7 +80,7 @@ jobs:
       - name: Enable PR auto-merge
         if: ${{ github.event_name == 'push' && steps.create_pr.outputs.PR_NUMBER != '' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RR_CREATE_TOEKN}}
         run: |
           gh pr merge --merge --auto ${{ steps.create_pr.outputs.PR_NUMBER}}
           
