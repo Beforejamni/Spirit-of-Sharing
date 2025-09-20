@@ -1,14 +1,19 @@
 package com.finalproject.sos.domain.auth.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.finalproject.sos.domain.auth.entity.SignIn;
 import com.finalproject.sos.domain.common.annotation.Adult;
+import com.finalproject.sos.domain.member.entity.Member;
+import com.finalproject.sos.domain.member.entity.RoleType;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 import lombok.Getter;
 
 
 import java.time.LocalDate;
 
 @Getter
+@Builder
 public class SignUpRequestDto {
 
     @NotBlank
@@ -21,13 +26,29 @@ public class SignUpRequestDto {
     private String password;
 
     @NotBlank
-    private String koreaName;
+    private String koreanName;
 
     @NotNull(message = "생년월일이 필수 입니다.")
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Adult(message = "성인만 이용가능합니다.")
     private LocalDate birthDate;
 
 
     private String slackId;
+
+    public SignIn toSignIn(String encodePw) {
+        return SignIn.builder()
+                .username(username)
+                .password(encodePw)
+                .build();
+    }
+
+    public Member toMember(RoleType roleType) {
+        return  Member.builder()
+                .koreanName(koreanName)
+                .birthDate(birthDate)
+                .slackId(slackId)
+                .roleType(roleType)
+                .build();
+    }
 }

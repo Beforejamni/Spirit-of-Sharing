@@ -3,8 +3,13 @@ package com.finalproject.sos.domain.auth.entity;
 
 import com.finalproject.sos.domain.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
+@NoArgsConstructor
 public class SignIn {
 
     @Id
@@ -19,4 +24,11 @@ public class SignIn {
 
     @OneToOne(mappedBy = "signIn", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     private Member member;
+
+
+    @Builder
+    private SignIn(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
 }
