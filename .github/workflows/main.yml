@@ -81,6 +81,7 @@ jobs:
         if: ${{ github.event_name == 'push' && steps.create_pr.outputs.PR_NUMBER != '' }}
         env:
           GH_TOKEN: ${{ secrets.PR_CREATOR_TOKEN }}
+
         run: |
           gh pr merge --merge --auto ${{ steps.create_pr.outputs.PR_NUMBER}}
 
