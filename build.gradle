@@ -46,6 +46,9 @@ dependencies {
     //Spring boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     //OpenFeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
