@@ -80,8 +80,8 @@ jobs:
       - name: Enable PR auto-merge
         if: ${{ github.event_name == 'push' && steps.create_pr.outputs.PR_NUMBER != '' }}
         env:
-          GH_TOKEN: ${{ secrets.RR_CREATOR_TOEKN}}
+          GH_TOKEN: ${{ secrets.RR_CREATOR_TOKEN}}
         run: |
           gh pr merge --merge --auto ${{ steps.create_pr.outputs.PR_NUMBER}}
-          
-            
+
+
