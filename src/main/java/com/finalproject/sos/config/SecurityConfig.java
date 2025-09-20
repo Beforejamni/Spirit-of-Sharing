@@ -1,6 +1,6 @@
 package com.finalproject.sos.config;
 
 
-//test1
+//test2
 public class SecurityConfig {
 }
