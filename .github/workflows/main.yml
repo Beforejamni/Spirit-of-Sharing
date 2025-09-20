@@ -77,11 +77,11 @@ jobs:
 
           echo "PR_NUMBER=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
-#      - name: Enable PR auto-merge
-#        if: ${{ github.event_name == 'push' && steps.create_pr.outputs.PR_NUMBER != '' }}
-#        env:
-#          GH_TOKEN: ${{ secrets.RR_CREATOR_TOEKN}}
-#        run: |
-#          gh pr merge --merge --auto ${{ steps.create_pr.outputs.PR_NUMBER}}
-#
-#
+      - name: Enable PR auto-merge
+        if: ${{ github.event_name == 'push' && steps.create_pr.outputs.PR_NUMBER != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.RR_CREATOR_TOEKN}}
+        run: |
+          gh pr merge --merge --auto ${{ steps.create_pr.outputs.PR_NUMBER}}
+
+
