@@ -36,6 +36,7 @@ public class SignUpRequestDto {
 
     private String slackId;
 
+    //SignIn 생성
     public SignIn toSignIn(String encodePw) {
         return SignIn.builder()
                 .username(username)
@@ -43,6 +44,7 @@ public class SignUpRequestDto {
                 .build();
     }
 
+    //Member 생성
     public Member toMember(RoleType roleType) {
         return  Member.builder()
                 .koreanName(koreanName)
