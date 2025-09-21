@@ -1,5 +1,6 @@
 package com.finalproject.sos.domain.auth.service;
 
+import com.finalproject.sos.domain.auth.dto.request.SignInRequestDto;
 import com.finalproject.sos.domain.auth.dto.request.SignUpRequestDto;
 import com.finalproject.sos.domain.auth.entity.SignIn;
 import com.finalproject.sos.domain.auth.repository.SignInRepository;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
@@ -53,7 +54,8 @@ public class AuthService {
         String refreshToken = jwtUtil.createRefreshToken(save.getMemberId());
 
         //출력 저장
-        Map<String, String> tokenMap = new HashMap<>();
+        //순서 보장
+        Map<String, String> tokenMap = new LinkedHashMap<>();
 
         tokenMap.put("accessToken", accessToken);
         tokenMap.put("refreshToken", refreshToken);
@@ -61,4 +63,28 @@ public class AuthService {
         return tokenMap;
     }
 
+    public Map<String, String> signIn(SignInRequestDto signInRequestDto) {
+
+        SignIn signIn = signInRepository.findWithMemberByUsername(signInRequestDto.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."));
+
+
+        if (!passwordEncoder.matches(signInRequestDto.getPassword(), signIn.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        String accessToken = jwtUtil.createAccessToken(signIn.getMember().getMemberId(),
+                                                        signIn.getUsername(),
+                                                        signIn.getMember().getRoleType());
+
+        String refreshToken = jwtUtil.createRefreshToken(signIn.getMember().getMemberId());
+
+        Map<String, String> tokenMap = new LinkedHashMap<>();
+
+        tokenMap.put("accessToken", accessToken);
+        tokenMap.put("refreshToken", refreshToken);
+        tokenMap.put("roleType", signIn.getMember().getRoleType().name() );
+
+        return tokenMap;
+    }
 }
