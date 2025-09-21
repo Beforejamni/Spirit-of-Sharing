@@ -6,8 +6,8 @@ build/
 !**/src/test/**/build/
 
 *.properties
-!application-test.yml
 *.yml
+!application-test.yml
 .env
 
 ### STS ###
