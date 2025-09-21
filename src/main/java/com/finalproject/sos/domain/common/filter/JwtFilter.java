@@ -24,10 +24,12 @@ public class JwtFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
 
-    //필터 적용 X
+    //필터 적용 X => 추후 수정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        if("/member/auth/signup".matches(request.getRequestURI())) {
+        if("/member/auth/signup".matches(request.getRequestURI()) ||
+            "/auth/signin".matches(request.getRequestURI()) ||
+            "/admin/auth/signup/seller".matches(request.getRequestURI())) {
             return true;
         }
         return false;
