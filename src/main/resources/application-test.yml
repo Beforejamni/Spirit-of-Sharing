@@ -14,5 +14,4 @@ spring:
     init:
       mode: never
 
-  jwt:
-    secret: lM1N9KhHo9r5dK3cOkFnIDtABjT9UPbV # Dummy
+JWT_SECRET: lM1N9KhHo9r5dK3cOkFnIDtABjT9UPbV # Dummy
