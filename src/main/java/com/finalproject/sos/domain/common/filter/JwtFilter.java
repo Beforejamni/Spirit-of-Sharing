@@ -28,7 +28,8 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         if("/member/auth/signup".matches(request.getRequestURI()) ||
-            "/auth/signin".matches(request.getRequestURI())) {
+            "/auth/signin".matches(request.getRequestURI()) ||
+            "/admin/auth/signup/seller".matches(request.getRequestURI())) {
             return true;
         }
         return false;

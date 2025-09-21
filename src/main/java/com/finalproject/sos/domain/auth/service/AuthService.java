@@ -59,6 +59,39 @@ public class AuthService {
 
         tokenMap.put("accessToken", accessToken);
         tokenMap.put("refreshToken", refreshToken);
+        tokenMap.put("roleType", save.getRoleType().name());
+
+        return tokenMap;
+    }
+
+    public Map<String, String> singUpSeller(SignUpRequestDto signUpRequestDto) {
+        //아이디 중복 조회
+        if (signInRepository.existsByUsername(signUpRequestDto.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 아이디입니다.");
+        }
+
+        //password 암호화 및 DB 저장
+        SignIn signIn = signUpRequestDto.toSignIn(passwordEncoder.encode(signUpRequestDto.getPassword()));
+        signInRepository.save(signIn);
+
+        //일반 사용자 권한 부여 및 DB signIn이랑 연결
+        Member member = signUpRequestDto.toMember(RoleType.SELLER);
+        member.linkSignIn(signIn);
+
+        //DB 저장
+        Member save = memberRepository.save(member);
+
+        //Token 발급
+        String accessToken = jwtUtil.createAccessToken(save.getMemberId(), save.getSignIn().getUsername(), save.getRoleType());
+        String refreshToken = jwtUtil.createRefreshToken(save.getMemberId());
+
+        //출력 저장
+        //순서 보장
+        Map<String, String> tokenMap = new LinkedHashMap<>();
+
+        tokenMap.put("accessToken", accessToken);
+        tokenMap.put("refreshToken", refreshToken);
+        tokenMap.put("roleType", save.getRoleType().name());
 
         return tokenMap;
     }
@@ -87,8 +120,10 @@ public class AuthService {
 
         tokenMap.put("accessToken", accessToken);
         tokenMap.put("refreshToken", refreshToken);
-        tokenMap.put("roleType", signIn.getMember().getRoleType().name() );
+        tokenMap.put("roleType", signIn.getMember().getRoleType().name());
 
         return tokenMap;
     }
+
+
 }
