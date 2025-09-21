@@ -41,10 +41,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     //JWT
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
     //Spring boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     //OpenFeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
