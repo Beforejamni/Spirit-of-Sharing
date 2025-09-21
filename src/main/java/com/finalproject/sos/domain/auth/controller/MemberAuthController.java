@@ -2,6 +2,7 @@ package com.finalproject.sos.domain.auth.controller;
 
 import com.finalproject.sos.domain.auth.dto.request.SignUpRequestDto;
 import com.finalproject.sos.domain.auth.service.AuthService;
+import com.finalproject.sos.domain.member.entity.RoleType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,6 @@ public class MemberAuthController {
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signUpMember (@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
 
-        return new ResponseEntity<>(authService.singUpMember(signUpRequestDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.singUp(signUpRequestDto, RoleType.COSTUMER), HttpStatus.CREATED);
     }
 }
