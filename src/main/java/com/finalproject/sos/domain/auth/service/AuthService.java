@@ -63,6 +63,10 @@ public class AuthService {
         return tokenMap;
     }
 
+
+
+
+    @Transactional
     public Map<String, String> signIn(SignInRequestDto signInRequestDto) {
 
         SignIn signIn = signInRepository.findWithMemberByUsername(signInRequestDto.getUsername())
