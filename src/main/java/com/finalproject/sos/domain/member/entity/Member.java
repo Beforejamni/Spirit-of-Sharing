@@ -2,6 +2,7 @@ package com.finalproject.sos.domain.member.entity;
 
 
 import com.finalproject.sos.domain.auth.entity.SignIn;
+import com.finalproject.sos.domain.auth.entity.SocialAccount;
 import com.finalproject.sos.domain.common.entity.TimeStamped;
 import jakarta.persistence.*;
 
@@ -39,6 +40,10 @@ public class Member extends TimeStamped {
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "sign_in_id", unique = true)
     private SignIn signIn;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "social_account_Id", unique = true)
+    private SocialAccount socialAccount;
 
 
     @Builder
