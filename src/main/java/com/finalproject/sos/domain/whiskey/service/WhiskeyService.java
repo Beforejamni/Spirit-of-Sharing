@@ -51,4 +51,13 @@ public class WhiskeyService {
         return WhiskeyResponseDto.builder().whiskey(whiskey).build();
 
     }
+
+    @Transactional
+    public WhiskeyResponseDto readBySeller(String whiskeyName) {
+
+        Whiskey whiskey = whiskeyRepository.findByWhiskeyName(whiskeyName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 위스키를 찾을 수 없습니다."));
+
+        return WhiskeyResponseDto.builder().whiskey(whiskey).build();
+    }
 }
