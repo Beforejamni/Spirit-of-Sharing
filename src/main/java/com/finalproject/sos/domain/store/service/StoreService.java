@@ -6,6 +6,7 @@ import com.finalproject.sos.domain.common.kakaoclient.KakaoLocalClient;
 import com.finalproject.sos.domain.member.entity.Member;
 import com.finalproject.sos.domain.member.repository.MemberRepository;
 import com.finalproject.sos.domain.store.dto.request.StoreRequestDto;
+import com.finalproject.sos.domain.store.dto.response.SellerStoreResponse;
 import com.finalproject.sos.domain.store.dto.response.StoreResponseDto;
 import com.finalproject.sos.domain.store.entity.Store;
 import com.finalproject.sos.domain.store.entity.StoreStatus;
@@ -92,4 +93,28 @@ public class StoreService {
 
     }
 
+
+    @Transactional
+    public SellerStoreResponse readByOwner(CustomUserDetails userDetails) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.findById(ownerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND , "해당 사장님을 찾을 수 없습니다."));
+
+        Store store = storeRepository.findByMember(member);
+
+        StoreAddress storeAddress = storeAddressRepository.findByStore(store).orElseThrow(
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 배장을 찾을 수 없습니다."));
+
+        String storeAddressName  = storeAddress.getStoreAddress();
+
+
+        return new SellerStoreResponse(store.getStoreName(),
+                                        storeAddressName,
+                                        store.getStoreContact(),
+                                        store.getStartTime(),
+                                        store.getEndTime(),
+                                        store.getStoreStatus());
+    }
 }
