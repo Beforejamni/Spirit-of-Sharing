@@ -15,3 +15,10 @@ spring:
       mode: never
 
 JWT_SECRET: lM1N9KhHo9r5dK3cOkFnIDtABjT9UPbV # Dummy
+
+
+kakao:
+  local:
+    base-url=https://dapi.kakao.com
+
+rest-api-key=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:
