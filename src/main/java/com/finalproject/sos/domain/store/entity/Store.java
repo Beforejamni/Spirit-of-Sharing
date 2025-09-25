@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,6 +16,7 @@ import java.time.LocalTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Where(clause = "is_deleted = false")
 public class Store extends TimeStamped {
 
     @Id
@@ -67,4 +69,13 @@ public class Store extends TimeStamped {
         this.endTime = (endTime != null) ? endTime : this.endTime;
     }
 
+    public void changeStoreStatus() {
+
+        this.storeStatus = (this.storeStatus == StoreStatus.PICKUP_DISABLE)
+                ? StoreStatus.PICKUP_ABLE : StoreStatus.PICKUP_DISABLE;
+    }
+
+    public void setIsDeleted(){
+        this.isDeleted = true;
+    }
 }

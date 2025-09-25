@@ -8,6 +8,7 @@ import com.finalproject.sos.domain.member.repository.MemberRepository;
 import com.finalproject.sos.domain.store.dto.request.ChangeStoreRequest;
 import com.finalproject.sos.domain.store.dto.request.StoreRequestDto;
 import com.finalproject.sos.domain.store.dto.response.SellerStoreResponse;
+import com.finalproject.sos.domain.store.dto.response.StoreResponseDto;
 import com.finalproject.sos.domain.store.entity.Store;
 import com.finalproject.sos.domain.store.entity.StoreStatus;
 import com.finalproject.sos.domain.store.repository.StoreRepository;
@@ -92,7 +93,7 @@ public class StoreService {
     }
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     public SellerStoreResponse readByOwner(CustomUserDetails userDetails) {
 
         Long ownerId = userDetails.getMemberId();
@@ -115,6 +116,22 @@ public class StoreService {
                                         store.getStartTime(),
                                         store.getEndTime(),
                                         store.getStoreStatus());
+    }
+
+
+    @Transactional(readOnly = true)
+    public StoreResponseDto readByStoreId(Long storeId) {
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게가 없습니다."));
+
+        return new StoreResponseDto(store.getStoreName(),
+                store.getStoreAddress().getStoreAddress(),
+                store.getStoreContact(),
+                store.getStartTime(),
+                store.getEndTime(),
+                store.getStoreStatus()
+        );
     }
 
     @Transactional
@@ -155,5 +172,40 @@ public class StoreService {
                 store.getStartTime(),
                 store.getEndTime(),
                 store.getStoreStatus());
+    }
+
+
+    @Transactional
+    public SellerStoreResponse pickupableStore(CustomUserDetails userDetails) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(ownerId);
+
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+
+       store.changeStoreStatus();
+
+        return new SellerStoreResponse(store.getStoreName(),
+                store.getStoreAddress().getStoreAddress(),
+                store.getStoreContact(),
+                store.getStartTime(),
+                store.getEndTime(),
+                store.getStoreStatus());
+    }
+
+    @Transactional
+    public void softDeleteStore(CustomUserDetails userDetails) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(ownerId);
+
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+
+        store.setIsDeleted();
+
     }
 }

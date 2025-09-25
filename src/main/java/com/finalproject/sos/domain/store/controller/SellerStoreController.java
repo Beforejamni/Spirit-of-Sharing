@@ -7,6 +7,7 @@ import com.finalproject.sos.domain.store.dto.request.StoreRequestDto;
 import com.finalproject.sos.domain.store.dto.response.SellerStoreResponse;
 import com.finalproject.sos.domain.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.init.RepositoriesPopulatedEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,5 +45,22 @@ public class SellerStoreController {
         SellerStoreResponse sellerStoreResponse = storeService.changeStore(userDetails, storeRequest);
 
         return ResponseEntity.ok().body(sellerStoreResponse);
+    }
+
+    @PostMapping("/pickupable")
+    public ResponseEntity<SellerStoreResponse> pickupableStore(@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+
+        SellerStoreResponse sellerStoreResponse = storeService.pickupableStore(userDetails);
+
+        return ResponseEntity.ok().body(sellerStoreResponse);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<Void> softDeleteStore(@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        storeService.softDeleteStore(userDetails);
+
+        return ResponseEntity.noContent().build();
     }
 }
