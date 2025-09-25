@@ -9,6 +9,7 @@ import com.finalproject.sos.domain.member.entity.Member;
 import com.finalproject.sos.domain.member.entity.RoleType;
 import com.finalproject.sos.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {

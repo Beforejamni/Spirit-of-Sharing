@@ -26,6 +26,6 @@ public class MemberAuthController {
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signUpMember (@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
 
-        return new ResponseEntity<>(authService.singUp(signUpRequestDto, RoleType.COSTUMER), HttpStatus.CREATED);
+        return new ResponseEntity<>(authService.singUp(signUpRequestDto, RoleType.CUSTOMER), HttpStatus.CREATED);
     }
 }

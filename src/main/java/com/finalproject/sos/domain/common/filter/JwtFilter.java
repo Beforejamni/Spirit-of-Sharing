@@ -51,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try{
 
-            String token = jwtUtil.subStringToken(header);
+            String token = jwtUtil.subStringToken(header).trim();
 
             Authentication authentication = jwtUtil.getAuthentication(token,customUserDetailsService);
 
