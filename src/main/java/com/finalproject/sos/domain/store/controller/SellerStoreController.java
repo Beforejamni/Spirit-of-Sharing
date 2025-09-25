@@ -55,4 +55,12 @@ public class SellerStoreController {
 
         return ResponseEntity.ok().body(sellerStoreResponse);
     }
+
+    @PostMapping("/delete")
+    public ResponseEntity<Void> softDeleteStore(@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        storeService.softDeleteStore(userDetails);
+
+        return ResponseEntity.noContent().build();
+    }
 }
