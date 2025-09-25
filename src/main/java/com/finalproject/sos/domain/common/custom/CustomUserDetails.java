@@ -32,6 +32,9 @@ public class CustomUserDetails implements UserDetails {
         return signIn.getPassword();
     }
 
+
+    public Long getMemberId() {return  signIn.getMember().getMemberId();}
+
     //Username 가져오기
     @Override
     public String getUsername() {

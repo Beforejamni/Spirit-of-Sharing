@@ -4,6 +4,7 @@ package com.finalproject.sos.domain.common.util;
 import com.finalproject.sos.domain.common.custom.CustomUserDetailsService;
 import com.finalproject.sos.domain.member.entity.RoleType;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.security.auth.message.AuthException;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.rmi.ServerException;
 import java.security.Key;
 import java.util.Date;
@@ -23,8 +25,9 @@ import java.util.Date;
 public class JwtUtil {
 
     @Value("${JWT_SECRET}")
-    private String secretKey;
+    private String secret;
     private Key key;
+    private JwtParser parser;
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -36,7 +39,12 @@ public class JwtUtil {
     @PostConstruct
     public void init() {
 
-        key = Keys.hmacShaKeyFor(secretKey.getBytes());
+       byte[] keyArray = secret.getBytes(StandardCharsets.UTF_8);
+
+       this.key = Keys.hmacShaKeyFor(keyArray);
+
+       this.parser = Jwts.parserBuilder().setSigningKey(key).build();
+
     }
 
     //Access Token 생성
@@ -46,6 +54,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .claim("memberId", memberId)
                 .claim("role", roleType.name())
+                .claim("type", "access")
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN))
                 .signWith(key, signatureAlgorithm)
                 .compact();
@@ -77,16 +86,17 @@ public class JwtUtil {
     private Claims getClaims(String token) throws  AuthException {
 
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
+            return parser
                     .parseClaimsJws(token)
                     .getBody();
-        }catch (ExpiredJwtException e) {
+        } catch (DecodingException e) {
+            throw new AuthException("토큰 디코딩 실패(Base64URL 형식 오류/개행/따옴표 혼입)");
+        } catch (ExpiredJwtException e) {
             throw new AuthException("만료된 토큰입니다.");
-
-        }catch (JwtException e) {
-            throw new AuthException("유효하지 않은 토큰입니다.");
+        } catch (MalformedJwtException e) {
+            throw new AuthException("토큰 형식이 잘못되었습니다.");
+        } catch (JwtException e) {
+            throw new jakarta.security.auth.message.AuthException("유효하지 않은 토큰입니다.");
         }
     }
 
@@ -94,7 +104,16 @@ public class JwtUtil {
     public Authentication getAuthentication(String token, CustomUserDetailsService customUserDetailsService) throws AuthException {
 
         Claims claims = getClaims(token);
+
+        String type = claims.get("type", String.class);
+
+        if(!"access".equals(type)) {
+            throw new AuthException("액세스 토큰이 아닙니다.");
+        }
+
         String username = claims.getSubject();
+
+        System.out.println(username);
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 

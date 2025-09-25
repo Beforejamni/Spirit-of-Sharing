@@ -3,6 +3,7 @@ package com.finalproject.sos.domain.member.entity;
 
 import com.finalproject.sos.domain.auth.entity.SignIn;
 import com.finalproject.sos.domain.common.entity.TimeStamped;
+import com.finalproject.sos.domain.store.entity.Store;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -39,6 +40,9 @@ public class Member extends TimeStamped {
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "sign_in_id", unique = true)
     private SignIn signIn;
+
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private Store store;
 
 
     @Builder
