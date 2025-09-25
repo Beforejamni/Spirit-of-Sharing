@@ -1,11 +1,13 @@
 package com.finalproject.sos.domain.auth.controller;
 
 
-import com.finalproject.sos.domain.auth.dto.request.SignInRequestDto;
+import com.finalproject.sos.domain.auth.dto.request.SignUpRequestDto;
 import com.finalproject.sos.domain.auth.service.AuthService;
+import com.finalproject.sos.domain.member.entity.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,15 +17,15 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
-public class AuthController {
+@RequestMapping("/admin")
+public class AdminAuthController {
+
 
     private final AuthService authService;
 
-    @PostMapping("/signin")
-    public ResponseEntity<Map<String, String>> signIn(@RequestBody SignInRequestDto signInRequestDto){
+    @PostMapping("/auth/signup/seller")
+    public ResponseEntity<Map<String, String>> signUpSeller(@Validated @RequestBody SignUpRequestDto signUpRequestDto) {
 
-
-        return new ResponseEntity<>(authService.signIn(signInRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(authService.singUp(signUpRequestDto, RoleType.SELLER),HttpStatus.CREATED);
     }
 }

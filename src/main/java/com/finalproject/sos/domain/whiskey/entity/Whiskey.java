@@ -1,4 +1,52 @@
 package com.finalproject.sos.domain.whiskey.entity;
 
-public class Whiskey {
+
+import com.finalproject.sos.domain.common.entity.TimeStamped;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Whiskey extends TimeStamped {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long whiskeyId;
+
+    @Column
+    private String whiskeyName;
+
+    @Column
+    private String whiskeyBrand;
+
+    @Column
+    private String whiskeyUrl;
+
+    @Column
+    private String whiskeyType;
+
+    @Column
+    private Double whiskeyAbv;
+
+    @Column
+    private String whiskeyTaste;
+
+    @Column
+    private Integer whiskeyAge;
+
+    @Builder
+    public Whiskey (String whiskeyName, String whiskeyBrand, String whiskeyUrl, String whiskeyType, Double whiskeyAbv, String whiskeyTaste, Integer whiskeyAge){
+        this.whiskeyName = whiskeyName;
+        this.whiskeyBrand = whiskeyBrand;
+        this.whiskeyUrl = whiskeyUrl;
+        this.whiskeyAbv = whiskeyAbv;
+        this.whiskeyType = whiskeyType;
+        this.whiskeyAge = whiskeyAge;
+        this.whiskeyTaste = whiskeyTaste;
+    }
 }
