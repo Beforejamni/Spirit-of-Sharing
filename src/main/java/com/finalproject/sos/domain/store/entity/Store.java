@@ -59,4 +59,12 @@ public class Store extends TimeStamped {
         this.storeAddress = storeAddress;
     }
 
+    public void changeStore(String storeName, String storeContact, LocalTime startTime, LocalTime endTime){
+
+        this.storeName = (storeName != null) ? storeName : this.storeName;
+        this.storeContact = (storeContact != null) ? storeContact : this.storeContact;
+        this.startTime = (startTime != null) ? startTime : this.startTime;
+        this.endTime = (endTime != null) ? endTime : this.endTime;
+    }
+
 }

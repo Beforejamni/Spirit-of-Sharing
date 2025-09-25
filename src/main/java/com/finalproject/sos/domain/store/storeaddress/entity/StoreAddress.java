@@ -49,4 +49,12 @@ public class StoreAddress extends TimeStamped {
         this.kakaoPlaceId = kakaoPlaceId;
     }
 
+
+    public void changeStoreAddress(String storeAddress, BigDecimal lat, BigDecimal lon, String kakaoPlaceId) {
+        this.storeAddress = (storeAddress != null) ? storeAddress : this.storeAddress;
+        this.lat = (lat != null) ? lat : this.lat;
+        this.lon = (lon != null) ? lon : this.lon;
+        this.kakaoPlaceId = (kakaoPlaceId != null) ? kakaoPlaceId : this.kakaoPlaceId;
+    }
+
 }

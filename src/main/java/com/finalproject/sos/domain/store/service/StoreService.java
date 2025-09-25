@@ -5,9 +5,9 @@ import com.finalproject.sos.domain.common.custom.CustomUserDetails;
 import com.finalproject.sos.domain.common.kakaoclient.KakaoLocalClient;
 import com.finalproject.sos.domain.member.entity.Member;
 import com.finalproject.sos.domain.member.repository.MemberRepository;
+import com.finalproject.sos.domain.store.dto.request.ChangeStoreRequest;
 import com.finalproject.sos.domain.store.dto.request.StoreRequestDto;
 import com.finalproject.sos.domain.store.dto.response.SellerStoreResponse;
-import com.finalproject.sos.domain.store.dto.response.StoreResponseDto;
 import com.finalproject.sos.domain.store.entity.Store;
 import com.finalproject.sos.domain.store.entity.StoreStatus;
 import com.finalproject.sos.domain.store.repository.StoreRepository;
@@ -57,8 +57,6 @@ public class StoreService {
         }
 
 
-
-
         var first = addressResponse.getDocumentList().get(0);
 
         BigDecimal lon = new BigDecimal(first.getX());
@@ -102,10 +100,11 @@ public class StoreService {
         Member member = memberRepository.findById(ownerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND , "해당 사장님을 찾을 수 없습니다."));
 
-        Store store = storeRepository.findByMember(member);
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
 
         StoreAddress storeAddress = storeAddressRepository.findByStore(store).orElseThrow(
-                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 배장을 찾을 수 없습니다."));
+                ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 주소을 찾을 수 없습니다."));
 
         String storeAddressName  = storeAddress.getStoreAddress();
 
@@ -116,5 +115,45 @@ public class StoreService {
                                         store.getStartTime(),
                                         store.getEndTime(),
                                         store.getStoreStatus());
+    }
+
+    @Transactional
+    public SellerStoreResponse changeStore(CustomUserDetails userDetails, ChangeStoreRequest storeRequest) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.findById(ownerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사장님을 찾을 수 없습니다."));
+
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+
+        store.changeStore(storeRequest.getStoreName(), storeRequest.getStoreContact(), storeRequest.getStartTime(),storeRequest.getEndTime());
+
+        StoreAddress storeAddress = storeAddressRepository.findByStore(store)
+                .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "해당 주소를 찾을 수 없습니다."));
+
+        var addressResponse = kakao.searchAddress(storeRequest.getStoreAddress(), 1);
+
+        var first = addressResponse.getDocumentList().get(0);
+
+        BigDecimal lon = new BigDecimal(first.getX());
+        BigDecimal lat = new BigDecimal(first.getY());
+
+        var keywordResponse = kakao.searchKeyword(storeRequest.getStoreAddress(), lon.toPlainString(), lat.toPlainString(), 50);
+
+        String kakaoPlaceId = (keywordResponse.getDocumentList() != null ||keywordResponse.getDocumentList().isEmpty())
+                ? keywordResponse.getDocumentList().get(0).getKakaoId()
+                : null;
+
+        storeAddress.changeStoreAddress(storeRequest.getStoreAddress(), lat, lon, kakaoPlaceId);
+
+
+        return new SellerStoreResponse(store.getStoreName(),
+                storeAddress.getStoreAddress(),
+                store.getStoreContact(),
+                store.getStartTime(),
+                store.getEndTime(),
+                store.getStoreStatus());
     }
 }

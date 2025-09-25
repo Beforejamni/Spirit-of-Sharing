@@ -2,6 +2,7 @@ package com.finalproject.sos.domain.store.controller;
 
 
 import com.finalproject.sos.domain.common.custom.CustomUserDetails;
+import com.finalproject.sos.domain.store.dto.request.ChangeStoreRequest;
 import com.finalproject.sos.domain.store.dto.request.StoreRequestDto;
 import com.finalproject.sos.domain.store.dto.response.SellerStoreResponse;
 import com.finalproject.sos.domain.store.service.StoreService;
@@ -32,6 +33,15 @@ public class SellerStoreController {
     public ResponseEntity<SellerStoreResponse> readByOwner(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
         SellerStoreResponse sellerStoreResponse = storeService.readByOwner(userDetails);
+
+        return ResponseEntity.ok().body(sellerStoreResponse);
+    }
+
+    @PostMapping("/change")
+    public ResponseEntity<SellerStoreResponse> changeStore(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                           @RequestBody ChangeStoreRequest storeRequest) {
+
+        SellerStoreResponse sellerStoreResponse = storeService.changeStore(userDetails, storeRequest);
 
         return ResponseEntity.ok().body(sellerStoreResponse);
     }
