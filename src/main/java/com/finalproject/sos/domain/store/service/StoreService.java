@@ -156,4 +156,25 @@ public class StoreService {
                 store.getEndTime(),
                 store.getStoreStatus());
     }
+
+
+    @Transactional
+    public SellerStoreResponse pickupableStore(CustomUserDetails userDetails) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(ownerId);
+
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
+
+       store.changeStoreStatus();
+
+        return new SellerStoreResponse(store.getStoreName(),
+                store.getStoreAddress().getStoreAddress(),
+                store.getStoreContact(),
+                store.getStartTime(),
+                store.getEndTime(),
+                store.getStoreStatus());
+    }
 }

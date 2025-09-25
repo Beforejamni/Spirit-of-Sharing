@@ -67,4 +67,10 @@ public class Store extends TimeStamped {
         this.endTime = (endTime != null) ? endTime : this.endTime;
     }
 
+    public void changeStoreStatus() {
+
+        this.storeStatus = (this.storeStatus == StoreStatus.PICKUP_DISABLE)
+                ? StoreStatus.PICKUP_ABLE : StoreStatus.PICKUP_DISABLE;
+    }
+
 }
