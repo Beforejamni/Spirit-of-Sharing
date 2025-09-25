@@ -2,6 +2,7 @@ package com.finalproject.sos.domain.whiskey.entity;
 
 
 import com.finalproject.sos.domain.common.entity.TimeStamped;
+import com.finalproject.sos.domain.whiskey.dto.request.WhiskeyRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,5 +49,15 @@ public class Whiskey extends TimeStamped {
         this.whiskeyType = whiskeyType;
         this.whiskeyAge = whiskeyAge;
         this.whiskeyTaste = whiskeyTaste;
+    }
+
+    public void updateWhiskey(WhiskeyRequestDto whiskeyRequestDto) {
+        this.whiskeyName = (whiskeyRequestDto.getWhiskeyName() != null) ? whiskeyRequestDto.getWhiskeyName() : this.whiskeyName;
+        this.whiskeyBrand = (whiskeyRequestDto.getWhiskeyBrand() != null) ? whiskeyRequestDto.getWhiskeyBrand() : this.whiskeyBrand;
+        this.whiskeyUrl = (whiskeyRequestDto.getWhiskeyUrl() != null) ? whiskeyRequestDto.getWhiskeyUrl() : this.whiskeyUrl;
+        this.whiskeyType = (whiskeyRequestDto.getWhiskeyType() != null) ? whiskeyRequestDto.getWhiskeyType() : this.whiskeyType;
+        this.whiskeyAbv = (whiskeyRequestDto.getWhiskeyAbv() != null) ? whiskeyRequestDto.getWhiskeyAbv() : this.whiskeyAbv;
+        this.whiskeyTaste = (whiskeyRequestDto.getWhiskeyTaste() != null) ? whiskeyRequestDto.getWhiskeyTaste() : this.whiskeyTaste;
+        this.whiskeyAge = (whiskeyRequestDto.getWhiskeyAbv() != null) ? whiskeyRequestDto.getWhiskeyAge() : this.whiskeyAge;
     }
 }

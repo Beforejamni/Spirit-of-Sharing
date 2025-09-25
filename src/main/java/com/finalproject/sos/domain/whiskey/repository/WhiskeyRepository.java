@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WhiskeyRepository extends JpaRepository<Whiskey, Long> {
+
+    boolean existsByWhiskeyName(String whiskeyName);
 }
