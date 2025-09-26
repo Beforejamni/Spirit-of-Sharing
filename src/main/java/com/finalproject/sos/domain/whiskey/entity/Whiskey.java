@@ -2,14 +2,16 @@ package com.finalproject.sos.domain.whiskey.entity;
 
 
 import com.finalproject.sos.domain.common.entity.TimeStamped;
+import com.finalproject.sos.domain.item.entity.Item;
 import com.finalproject.sos.domain.whiskey.dto.request.WhiskeyRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.math.BigDecimal;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,6 +41,9 @@ public class Whiskey extends TimeStamped {
 
     @Column
     private Integer whiskeyAge;
+
+    @OneToMany(mappedBy = "whiskey", fetch = FetchType.LAZY)
+    private List<Item> itemList = new ArrayList<>();
 
     @Builder
     public Whiskey (String whiskeyName, String whiskeyBrand, String whiskeyUrl, String whiskeyType, Double whiskeyAbv, String whiskeyTaste, Integer whiskeyAge){
