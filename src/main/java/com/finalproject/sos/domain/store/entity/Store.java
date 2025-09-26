@@ -6,9 +6,7 @@ import com.finalproject.sos.domain.member.entity.Member;
 import com.finalproject.sos.domain.store.storeaddress.entity.StoreAddress;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Where;
-
-import java.time.LocalDateTime;
+import org.hibernate.annotations.SoftDelete;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-@Where(clause = "is_deleted = false")
+@SoftDelete(columnName = "is_deleted")
 public class Store extends TimeStamped {
 
     @Id
@@ -41,8 +39,6 @@ public class Store extends TimeStamped {
     @Column(nullable = false)
     private LocalTime endTime;
 
-    @Column(nullable = true)
-    private boolean isDeleted;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", unique = true)
@@ -58,16 +54,6 @@ public class Store extends TimeStamped {
     private List<Item> itemList = new ArrayList<>();
 
 
-//    @Builder
-//    public Store(String storeName, String storeContact, StoreStatus storeStatus, LocalTime startTime, LocalTime endTime, Member member, StoreAddress storeAddress) {
-//        this.storeName = storeName;
-//        this.storeContact = storeContact;
-//        this.storeStatus = storeStatus;
-//        this.startTime = startTime;
-//        this.endTime = endTime;
-//        this.member = member;
-//        this.storeAddress = storeAddress;
-//    }
 
     public void changeStore(String storeName, String storeContact, LocalTime startTime, LocalTime endTime){
 
@@ -83,7 +69,5 @@ public class Store extends TimeStamped {
                 ? StoreStatus.PICKUP_ABLE : StoreStatus.PICKUP_DISABLE;
     }
 
-    public void setIsDeleted(){
-        this.isDeleted = true;
-    }
+
 }

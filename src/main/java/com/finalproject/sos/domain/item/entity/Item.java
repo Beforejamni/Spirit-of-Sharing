@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SoftDelete;
 
 import java.math.BigDecimal;
 
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
         }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SoftDelete(columnName = "is_deleted")
 public class Item {
 
     @Id
@@ -39,9 +41,6 @@ public class Item {
 
     @Column(precision = 10, scale = 2 , nullable = false)
     private BigDecimal itemPrice;
-
-    @Column
-    private boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "whiskey_id", nullable = false)

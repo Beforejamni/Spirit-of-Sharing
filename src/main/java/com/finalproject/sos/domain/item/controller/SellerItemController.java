@@ -35,6 +35,15 @@ public class SellerItemController {
         return  ResponseEntity.ok(itemService.updateItem(userDetails, itemId, requestDto));
     }
 
+    @PostMapping("/delete/{itemId}")
+    public ResponseEntity<Void> deleteItem(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @PathVariable Long itemId){
+
+        itemService.deleteItem(userDetails, itemId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponseDto> readBySeller(@AuthenticationPrincipal CustomUserDetails userDetails,

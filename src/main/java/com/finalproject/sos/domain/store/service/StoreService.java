@@ -205,7 +205,7 @@ public class StoreService {
         Store store = storeRepository.findByMember(member)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게를 찾을 수 없습니다."));
 
-        store.setIsDeleted();
+       storeRepository.delete(store);
 
     }
 }
