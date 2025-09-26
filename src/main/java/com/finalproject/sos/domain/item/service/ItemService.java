@@ -45,4 +45,13 @@ public class ItemService {
 
         return ItemResponseDto.builder().item(item).build();
     }
+
+    public ItemResponseDto readByMember(Long itemId) {
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 물품이 존재하지 않습니다."));
+
+
+        return ItemResponseDto.builder().item(item).build();
+    }
 }
