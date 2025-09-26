@@ -26,10 +26,21 @@ public class SellerItemController {
         return new ResponseEntity<>(itemService.saveItem(userDetails, whiskeyId, requestDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/update/{itemId}")
+    public ResponseEntity<ItemResponseDto> updateItem(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                      @PathVariable Long itemId,
+                                                      @RequestBody ItemRequestDto requestDto) {
+
+
+        return  ResponseEntity.ok(itemService.updateItem(userDetails, itemId, requestDto));
+    }
+
+
     @GetMapping("/{itemId}")
     public ResponseEntity<ItemResponseDto> readBySeller(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                         @PathVariable Long itemId) {
 
         return ResponseEntity.ok().body(itemService.readBySeller(userDetails ,itemId));
     }
+
 }

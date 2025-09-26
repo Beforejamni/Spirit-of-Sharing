@@ -76,4 +76,26 @@ public class ItemService {
 
         return ItemResponseDto.builder().item(item).build();
     }
+
+    @Transactional
+    public ItemResponseDto updateItem(CustomUserDetails userDetails, Long itemId, ItemRequestDto requestDto) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(ownerId);
+
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게가 존재하지 않습니다."));
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 물품이 존재하지 않습니다."));
+
+        if(!store.getStoreName().matches(item.getStore().getStoreName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 가게의 물품이 아닙니다.");
+        }
+
+        item.updateItem(requestDto);
+
+        return ItemResponseDto.builder().item(item).build();
+    }
 }

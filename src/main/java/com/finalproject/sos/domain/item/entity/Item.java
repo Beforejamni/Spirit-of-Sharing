@@ -60,4 +60,12 @@ public class Item {
         this.whiskey = whiskey;
         this.store = store;
     }
+
+
+    public void updateItem(ItemRequestDto itemRequestDto){
+        this.snackType = (itemRequestDto.getSnackType() != null) ? itemRequestDto.getSnackType() : this.snackType;
+        this.cocktail = (itemRequestDto.getCocktail() != null) ? itemRequestDto.getCocktail() : this.cocktail;
+        this.itemCnt = (itemRequestDto.getItemCnt() != null) ? itemRequestDto.getItemCnt() : this.itemCnt;
+        this.itemPrice = (itemRequestDto.getItemPrice() != null) ? itemRequestDto.getItemPrice() : this.itemPrice;
+    }
 }
