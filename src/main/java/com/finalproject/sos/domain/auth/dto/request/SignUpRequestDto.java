@@ -46,11 +46,7 @@ public class SignUpRequestDto {
 
     //Member 생성
     public Member toMember(RoleType roleType) {
-        return  Member.builder()
-                .koreanName(koreanName)
-                .birthDate(birthDate)
-                .slackId(slackId)
-                .roleType(roleType)
-                .build();
+
+        return new Member(koreanName, birthDate, slackId, roleType);
     }
 }

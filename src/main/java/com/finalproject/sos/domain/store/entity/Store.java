@@ -3,6 +3,7 @@ package com.finalproject.sos.domain.store.entity;
 import com.finalproject.sos.domain.common.entity.TimeStamped;
 import com.finalproject.sos.domain.item.entity.Item;
 import com.finalproject.sos.domain.member.entity.Member;
+import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.store.storeaddress.entity.StoreAddress;
 import jakarta.persistence.*;
 import lombok.*;
@@ -54,10 +55,12 @@ public class Store extends TimeStamped {
     @Builder.Default
     private List<Item> itemList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Order> orderList = new ArrayList<>();
 
 
-
-    public void changeStore(String storeName, String storeContact, LocalTime startTime, LocalTime endTime){
+    public void changeStore(String storeName, String storeContact, LocalTime startTime, LocalTime endTime) {
 
         this.storeName = (storeName != null) ? storeName : this.storeName;
         this.storeContact = (storeContact != null) ? storeContact : this.storeContact;
@@ -70,5 +73,6 @@ public class Store extends TimeStamped {
         this.storeStatus = (this.storeStatus == StoreStatus.PICKUP_DISABLE)
                 ? StoreStatus.PICKUP_ABLE : StoreStatus.PICKUP_DISABLE;
     }
+}
 
 

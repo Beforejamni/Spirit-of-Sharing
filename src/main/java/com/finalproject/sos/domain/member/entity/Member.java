@@ -3,6 +3,7 @@ package com.finalproject.sos.domain.member.entity;
 
 import com.finalproject.sos.domain.auth.entity.SignIn;
 import com.finalproject.sos.domain.common.entity.TimeStamped;
+import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.store.entity.Store;
 import jakarta.persistence.*;
 
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -44,9 +47,10 @@ public class Member extends TimeStamped {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Store store;
 
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Order> orderList = new ArrayList<>();
 
-    @Builder
-    private Member(String koreanName, LocalDate birthDate, String slackId, RoleType roleType) {
+    public Member(String koreanName, LocalDate birthDate, String slackId, RoleType roleType) {
         this.koreanName = koreanName;
         this.birthDate = birthDate;
         this.slackId = slackId;
