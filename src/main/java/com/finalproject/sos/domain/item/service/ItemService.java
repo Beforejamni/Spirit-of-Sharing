@@ -3,6 +3,7 @@ package com.finalproject.sos.domain.item.service;
 import com.finalproject.sos.domain.common.custom.CustomUserDetails;
 import com.finalproject.sos.domain.item.dto.request.ItemRequestDto;
 import com.finalproject.sos.domain.item.dto.response.ItemResponseDto;
+import com.finalproject.sos.domain.item.dto.response.SearchByWhiskeyResponseDto;
 import com.finalproject.sos.domain.item.entity.Item;
 import com.finalproject.sos.domain.item.repository.ItemRepository;
 import com.finalproject.sos.domain.member.entity.Member;
@@ -12,10 +13,16 @@ import com.finalproject.sos.domain.store.repository.StoreRepository;
 import com.finalproject.sos.domain.whiskey.entity.Whiskey;
 import com.finalproject.sos.domain.whiskey.repository.WhiskeyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -118,5 +125,36 @@ public class ItemService {
 
         itemRepository.delete(item);
 
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SearchByWhiskeyResponseDto> searchByWhiskeyName(String whiskeyName, Pageable pageable) {
+
+        //위스키 이름이 존재하는 지 확인 및 위스키 가져오기
+        Whiskey whiskey = whiskeyRepository.findByWhiskeyName(whiskeyName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 위스키가 존재하지 않습니다."));
+
+
+        //가져온 위스키로 등록된 상품 페이지 네이션
+        Page<Item> itemPage = itemRepository.findAllByWhiskey(whiskey, pageable);
+
+        //Dto로 변경
+        List<SearchByWhiskeyResponseDto> dtoList =  itemPage.getContent().stream()
+                .map(SearchByWhiskeyResponseDto::new)
+                .toList();
+
+        return new PageImpl<>( dtoList, pageable, itemPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<SearchByWhiskeyResponseDto> searchByWhiskeyType(String whiskeyType, Pageable pageable) {
+
+        if(!whiskeyRepository.existsByWhiskeyType(whiskeyType)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 범주의 위스키를 찾을 수 없습니다.");
+        }
+
+        Slice<Item> itemSlice = itemRepository.findAllByWhiskey_WhiskeyType(whiskeyType, pageable);
+
+        return itemSlice.map(SearchByWhiskeyResponseDto::new);
     }
 }

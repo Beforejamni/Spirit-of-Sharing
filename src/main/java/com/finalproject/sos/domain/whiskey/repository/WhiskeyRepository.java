@@ -13,4 +13,10 @@ public interface WhiskeyRepository extends JpaRepository<Whiskey, Long> {
     boolean existsByWhiskeyName(String whiskeyName);
 
     Optional<Whiskey> findByWhiskeyName(String whiskeyName);
+
+    Whiskey getReferenceByWhiskeyName(String whiskeyName);
+
+    Optional<Whiskey> findByWhiskeyType(String whiskeyType);
+
+    boolean existsByWhiskeyType(String whiskeyType);
 }

@@ -1,6 +1,7 @@
 package com.finalproject.sos.domain.item.entity;
 
 
+import com.finalproject.sos.domain.common.entity.TimeStamped;
 import com.finalproject.sos.domain.item.dto.request.ItemRequestDto;
 import com.finalproject.sos.domain.store.entity.Store;
 import com.finalproject.sos.domain.whiskey.entity.Whiskey;
@@ -23,7 +24,7 @@ import java.math.BigDecimal;
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SoftDelete(columnName = "is_deleted")
-public class Item {
+public class Item extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
