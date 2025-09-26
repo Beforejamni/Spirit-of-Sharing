@@ -2,6 +2,7 @@ package com.finalproject.sos.domain.order.controller;
 
 
 import com.finalproject.sos.domain.common.custom.CustomUserDetails;
+import com.finalproject.sos.domain.order.dto.response.CancelOrderResponseDto;
 import com.finalproject.sos.domain.order.dto.response.CreatedOrderResponse;
 import com.finalproject.sos.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,13 @@ public class MemberOrderController {
                                                           @RequestParam Integer itemCnt) {
 
         return new ResponseEntity<>(orderService.saveOrder(userDetails, itemId, itemCnt), HttpStatus.CREATED);
+    }
+
+    @PostMapping("cancel/{orderId}")
+    public ResponseEntity<CancelOrderResponseDto> cancelOrder(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                              @PathVariable Long orderId) {
+
+
+        return ResponseEntity.ok().body(orderService.cancelOrder(userDetails, orderId));
     }
 }

@@ -62,4 +62,8 @@ public class Order extends TimeStamped {
         this.store = item.getStore();
         this.item = item;
     }
+
+    public void cancelOrder(){
+        this.orderStatus = OrderStatus.CANCELED_ORDER;
+    }
 }
