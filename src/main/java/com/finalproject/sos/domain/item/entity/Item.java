@@ -3,16 +3,17 @@ package com.finalproject.sos.domain.item.entity;
 
 import com.finalproject.sos.domain.common.entity.TimeStamped;
 import com.finalproject.sos.domain.item.dto.request.ItemRequestDto;
+import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.store.entity.Store;
 import com.finalproject.sos.domain.whiskey.entity.Whiskey;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SoftDelete;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Entity
@@ -51,7 +52,10 @@ public class Item extends TimeStamped {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    @Builder
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Order> orderList = new ArrayList<>();
+
+
     public Item(ItemRequestDto itemRequestDto, Whiskey whiskey, Store store){
         this.snackType = (itemRequestDto.getSnackType() != null) ? itemRequestDto.getSnackType() : null;
         this.cocktail = (itemRequestDto.getCocktail() != null) ? itemRequestDto.getCocktail() : null;
@@ -67,5 +71,9 @@ public class Item extends TimeStamped {
         this.cocktail = (itemRequestDto.getCocktail() != null) ? itemRequestDto.getCocktail() : this.cocktail;
         this.itemCnt = (itemRequestDto.getItemCnt() != null) ? itemRequestDto.getItemCnt() : this.itemCnt;
         this.itemPrice = (itemRequestDto.getItemPrice() != null) ? itemRequestDto.getItemPrice() : this.itemPrice;
+    }
+
+    public void restItemCnt(int rest) {
+        this.itemCnt = rest;
     }
 }

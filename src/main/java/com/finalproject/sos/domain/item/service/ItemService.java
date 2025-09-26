@@ -48,7 +48,7 @@ public class ItemService {
         Whiskey whiskey = whiskeyRepository.findById(whiskeyId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 위스키가 없습니다."));
 
-        Item item = Item.builder().whiskey(whiskey).store(store).itemRequestDto(requestDto).build();
+        Item item = new Item(requestDto, whiskey, store);
 
         itemRepository.save(item);
 
