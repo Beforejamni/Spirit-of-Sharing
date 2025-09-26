@@ -4,6 +4,7 @@ package com.finalproject.sos.domain.item.controller;
 import com.finalproject.sos.domain.item.dto.response.ItemResponseDto;
 import com.finalproject.sos.domain.item.dto.response.SearchByWhiskeyResponseDto;
 import com.finalproject.sos.domain.item.service.ItemService;
+import com.finalproject.sos.domain.store.dto.response.SimpleStoreResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,5 +42,12 @@ public class MemberItemController {
                                                                                  @PageableDefault() Pageable pageable){
 
         return ResponseEntity.ok().body(itemService.searchByWhiskeyType(whiskeyType, pageable));
+    }
+
+    @GetMapping("/order/{whiskeyId}")
+    public ResponseEntity<Slice<SimpleStoreResponseDto>> readForOrder(@PathVariable Long whiskeyId,
+                                                                      @PageableDefault() Pageable pageable) {
+
+        return ResponseEntity.ok().body(itemService.readForOrder(whiskeyId, pageable));
     }
 }

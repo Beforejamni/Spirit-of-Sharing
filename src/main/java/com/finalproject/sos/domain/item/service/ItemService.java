@@ -8,6 +8,7 @@ import com.finalproject.sos.domain.item.entity.Item;
 import com.finalproject.sos.domain.item.repository.ItemRepository;
 import com.finalproject.sos.domain.member.entity.Member;
 import com.finalproject.sos.domain.member.repository.MemberRepository;
+import com.finalproject.sos.domain.store.dto.response.SimpleStoreResponseDto;
 import com.finalproject.sos.domain.store.entity.Store;
 import com.finalproject.sos.domain.store.repository.StoreRepository;
 import com.finalproject.sos.domain.whiskey.entity.Whiskey;
@@ -156,5 +157,16 @@ public class ItemService {
         Slice<Item> itemSlice = itemRepository.findAllByWhiskey_WhiskeyType(whiskeyType, pageable);
 
         return itemSlice.map(SearchByWhiskeyResponseDto::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<SimpleStoreResponseDto> readForOrder(Long whiskeyId, Pageable pageable) {
+
+        Whiskey whiskey = whiskeyRepository.findById(whiskeyId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 위스키를 찾을 수 없습니다."));
+
+        Slice<Item> itemSlice = itemRepository.findAllByWhiskey(whiskey, pageable);
+
+        return itemSlice.map(SimpleStoreResponseDto::new);
     }
 }
