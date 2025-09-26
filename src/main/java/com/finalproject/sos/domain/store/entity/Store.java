@@ -30,6 +30,7 @@ public class Store extends TimeStamped {
     private String storeContact;
 
     @Column(nullable = false)
+
     @Enumerated(EnumType.STRING)
     private StoreStatus storeStatus;
 
@@ -55,6 +56,7 @@ public class Store extends TimeStamped {
 
 
 
+
     public void changeStore(String storeName, String storeContact, LocalTime startTime, LocalTime endTime){
 
         this.storeName = (storeName != null) ? storeName : this.storeName;
@@ -70,4 +72,3 @@ public class Store extends TimeStamped {
     }
 
 
-}

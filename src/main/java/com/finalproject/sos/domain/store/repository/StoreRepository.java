@@ -12,5 +12,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Optional<Store> findByMember(Member member);
 
+
     Long getReferenceByMember(Member member);
+
 }
