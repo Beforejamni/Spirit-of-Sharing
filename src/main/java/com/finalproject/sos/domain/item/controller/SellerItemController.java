@@ -25,4 +25,11 @@ public class SellerItemController {
 
         return new ResponseEntity<>(itemService.saveItem(userDetails, whiskeyId, requestDto), HttpStatus.CREATED);
     }
+
+    @GetMapping("/{itemId}")
+    public ResponseEntity<ItemResponseDto> readBySeller(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                        @PathVariable Long itemId) {
+
+        return ResponseEntity.ok().body(itemService.readBySeller(userDetails ,itemId));
+    }
 }

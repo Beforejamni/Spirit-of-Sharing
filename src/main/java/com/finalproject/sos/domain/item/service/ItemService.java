@@ -12,9 +12,9 @@ import com.finalproject.sos.domain.store.repository.StoreRepository;
 import com.finalproject.sos.domain.whiskey.entity.Whiskey;
 import com.finalproject.sos.domain.whiskey.repository.WhiskeyRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -26,6 +26,7 @@ public class ItemService {
     private final StoreRepository storeRepository;
     private final WhiskeyRepository whiskeyRepository;
 
+    @Transactional
     public ItemResponseDto saveItem(CustomUserDetails userDetails, Long whiskeyId, ItemRequestDto requestDto) {
 
         Long ownerId = userDetails.getMemberId();
@@ -46,11 +47,32 @@ public class ItemService {
         return ItemResponseDto.builder().item(item).build();
     }
 
+    @Transactional(readOnly = true)
     public ItemResponseDto readByMember(Long itemId) {
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 물품이 존재하지 않습니다."));
 
+
+        return ItemResponseDto.builder().item(item).build();
+    }
+
+    @Transactional(readOnly = true)
+    public ItemResponseDto readBySeller(CustomUserDetails userDetails, Long itemId) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(ownerId);
+
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게가 존재하지 않습니다."));
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 물품이 존재하지 않습니다."));
+
+        if(!store.getStoreName().matches(item.getStore().getStoreName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 가게의 물품이 아닙니다.");
+        }
 
         return ItemResponseDto.builder().item(item).build();
     }
