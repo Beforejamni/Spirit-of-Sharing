@@ -8,6 +8,7 @@ import com.finalproject.sos.domain.member.entity.Member;
 import com.finalproject.sos.domain.member.repository.MemberRepository;
 import com.finalproject.sos.domain.order.dto.response.CancelOrderResponseDto;
 import com.finalproject.sos.domain.order.dto.response.CreatedOrderResponse;
+import com.finalproject.sos.domain.order.dto.response.OrderResponseDto;
 import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.order.entity.OrderStatus;
 import com.finalproject.sos.domain.order.repository.OrderRepository;
@@ -103,6 +104,29 @@ public class OrderService {
         return CancelOrderResponseDto.builder().order(order).build();
     }
 
+    @Transactional
+    public OrderResponseDto updateOrderStatusBySeller(CustomUserDetails userDetails, Long orderId ,OrderStatus orderStatus) {
+
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(ownerId);
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 주문을 찾을 수 없습니다."));
+
+        if(order.getStore().getMember() != member) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "내 가게 주문이 아닙니다.");
+        }
+
+        switch (order.getOrderStatus()) {
+            case CANCELED_ORDER -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"이미 취소된 주문입니다.");
+            case COMPLETED_PICKUP -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"이미 픽업 완료된 주문입니다.");
+            default -> order.updateStatus(orderStatus);
+        }
+
+        return OrderResponseDto.builder().order(order).build();
+    }
+
 
     private String createOrderNum() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -116,6 +140,7 @@ public class OrderService {
 
         return sb.toString();
     }
+
 
 
 }
