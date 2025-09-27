@@ -57,7 +57,7 @@ public class Item extends TimeStamped {
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Order> orderList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "notification",fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "item",fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Notification> notiList = new ArrayList<>();
 
 

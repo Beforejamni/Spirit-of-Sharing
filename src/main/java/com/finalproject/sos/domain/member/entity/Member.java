@@ -52,7 +52,7 @@ public class Member extends TimeStamped {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Order> orderList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "nofitication",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member",fetch = FetchType.LAZY)
     private List<Notification> notiList = new ArrayList<>();
 
     public Member(String koreanName, LocalDate birthDate, String slackId, RoleType roleType) {
