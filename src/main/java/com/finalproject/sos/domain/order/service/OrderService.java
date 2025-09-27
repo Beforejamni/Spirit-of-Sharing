@@ -12,7 +12,11 @@ import com.finalproject.sos.domain.order.dto.response.OrderResponseDto;
 import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.order.entity.OrderStatus;
 import com.finalproject.sos.domain.order.repository.OrderRepository;
+import com.finalproject.sos.domain.store.entity.Store;
+import com.finalproject.sos.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,7 @@ import java.math.BigDecimal;
 public class OrderService {
 
     private final MemberRepository memberRepository;
+    private final StoreRepository storeRepository;
     private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
 
@@ -142,5 +147,30 @@ public class OrderService {
     }
 
 
+    @Transactional(readOnly = true)
+    public Slice<OrderResponseDto> readAllBySeller(CustomUserDetails userDetails, Pageable pageable) {
 
+        Long ownerId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(ownerId);
+
+        Store store = storeRepository.findByMember(member)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 가게가 존재하지 않습니다."));
+
+        Slice<Order> orderSlice = orderRepository.findAllByStore(store, pageable);
+
+
+        return orderSlice.map(order -> OrderResponseDto.builder().order(order).build());
+    }
+    @Transactional(readOnly = true)
+    public Slice<OrderResponseDto> readAllByMember(CustomUserDetails userDetails, Pageable pageable) {
+
+        Long meId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(meId);
+
+        Slice<Order> orderSlice = orderRepository.findAllByMember(member, pageable);
+
+        return orderSlice.map(order -> OrderResponseDto.builder().order(order).build());
+    }
 }

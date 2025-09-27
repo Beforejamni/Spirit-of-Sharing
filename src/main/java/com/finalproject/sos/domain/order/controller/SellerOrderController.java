@@ -6,7 +6,11 @@ import com.finalproject.sos.domain.order.dto.response.CancelOrderResponseDto;
 import com.finalproject.sos.domain.order.dto.response.OrderResponseDto;
 import com.finalproject.sos.domain.order.entity.OrderStatus;
 import com.finalproject.sos.domain.order.service.OrderService;
+import feign.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -32,5 +36,12 @@ public class SellerOrderController {
                                                                       @RequestParam OrderStatus orderStatus) {
 
         return ResponseEntity.ok().body(orderService.updateOrderStatusBySeller(userDetails, orderId, orderStatus));
+    }
+
+    @GetMapping
+    public ResponseEntity<Slice<OrderResponseDto>> readAllBySeller(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                   @PageableDefault()Pageable pageable) {
+
+        return ResponseEntity.ok().body(orderService.readAllBySeller(userDetails, pageable));
     }
 }
