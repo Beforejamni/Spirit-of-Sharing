@@ -32,6 +32,8 @@ public class NotiService {
     @Transactional
     public NotiResponseDto saveNoti(CustomUserDetails userDetails, Long itemId) {
 
+
+        //재고 카운트가 0일 때만
         Long meId = userDetails.getMemberId();
 
         Member member = memberRepository.findById(meId)
