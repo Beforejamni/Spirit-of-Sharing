@@ -3,6 +3,7 @@ package com.finalproject.sos.domain.item.entity;
 
 import com.finalproject.sos.domain.common.entity.TimeStamped;
 import com.finalproject.sos.domain.item.dto.request.ItemRequestDto;
+import com.finalproject.sos.domain.notification.entity.Notification;
 import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.store.entity.Store;
 import com.finalproject.sos.domain.whiskey.entity.Whiskey;
@@ -13,6 +14,7 @@ import org.hibernate.annotations.SoftDelete;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.LongStream;
 
 
 @Getter
@@ -54,6 +56,9 @@ public class Item extends TimeStamped {
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Order> orderList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "notification",fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Notification> notiList = new ArrayList<>();
 
 
     public Item(ItemRequestDto itemRequestDto, Whiskey whiskey, Store store){
