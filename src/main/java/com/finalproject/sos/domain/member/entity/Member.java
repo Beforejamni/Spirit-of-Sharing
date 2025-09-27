@@ -3,6 +3,7 @@ package com.finalproject.sos.domain.member.entity;
 
 import com.finalproject.sos.domain.auth.entity.SignIn;
 import com.finalproject.sos.domain.common.entity.TimeStamped;
+import com.finalproject.sos.domain.member.address.entity.MemberAddress;
 import com.finalproject.sos.domain.notification.entity.Notification;
 import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.store.entity.Store;
@@ -49,6 +50,10 @@ public class Member extends TimeStamped {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Store store;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_address_id")
+    private MemberAddress memberAddress;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Order> orderList = new ArrayList<>();
 
@@ -69,5 +74,9 @@ public class Member extends TimeStamped {
         }
 
         this.signIn = signIn;
+    }
+
+    public void updateMemberAddress(MemberAddress memberAddress) {
+        this.memberAddress = memberAddress;
     }
 }
