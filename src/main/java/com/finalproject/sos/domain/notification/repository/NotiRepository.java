@@ -19,4 +19,6 @@ public interface NotiRepository extends JpaRepository<Notification, Long> {
 
     @Query("select i from Notification n join n.item i where n.member.memberId =:meId and n.notiStatus = true")
     Slice<Item> findItemByMemberId(Long meId, Pageable pageable);
+
+    Notification findByMemberAndItem(Member member, Item item);
 }
