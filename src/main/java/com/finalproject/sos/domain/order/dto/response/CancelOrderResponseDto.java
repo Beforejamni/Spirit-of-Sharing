@@ -12,7 +12,7 @@ import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderResponseDto {
+public class CancelOrderResponseDto {
 
     private String orderNum;
 
@@ -36,9 +36,8 @@ public class OrderResponseDto {
 
     private LocalTime endTime;
 
-
     @Builder
-    public OrderResponseDto(Order order) {
+    public CancelOrderResponseDto (Order order){
         this.orderNum = order.getOrderNum();
         this.whiskeyName = order.getItem().getWhiskey().getWhiskeyName();
         this.orderCnt = order.getOrderCnt();

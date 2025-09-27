@@ -2,17 +2,14 @@ package com.finalproject.sos.domain.order.dto.response;
 
 import com.finalproject.sos.domain.order.entity.Order;
 import com.finalproject.sos.domain.order.entity.OrderStatus;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderResponseDto {
+public class CreatedOrderResponse {
 
     private String orderNum;
 
@@ -38,7 +35,7 @@ public class OrderResponseDto {
 
 
     @Builder
-    public OrderResponseDto(Order order) {
+    public CreatedOrderResponse (Order order){
         this.orderNum = order.getOrderNum();
         this.whiskeyName = order.getItem().getWhiskey().getWhiskeyName();
         this.orderCnt = order.getOrderCnt();

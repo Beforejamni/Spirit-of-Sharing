@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private SignInRepository signInRepository;
+    private final SignInRepository signInRepository;
 
 
     //사용자 정보를 불러오기
