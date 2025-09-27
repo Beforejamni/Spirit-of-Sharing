@@ -44,4 +44,11 @@ public class MemberOrderController {
 
         return ResponseEntity.ok().body(orderService.readAllByMember(userDetails, pageable));
     }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDto> readByMember(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                         @PathVariable Long orderId) {
+
+        return ResponseEntity.ok().body(orderService.readByMember(userDetails, orderId));
+    }
 }

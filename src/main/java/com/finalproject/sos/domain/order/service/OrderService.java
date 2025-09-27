@@ -173,4 +173,21 @@ public class OrderService {
 
         return orderSlice.map(order -> OrderResponseDto.builder().order(order).build());
     }
+
+    @Transactional(readOnly = true)
+    public OrderResponseDto readByMember(CustomUserDetails userDetails, Long orderId) {
+
+        Long meId = userDetails.getMemberId();
+
+        Member member = memberRepository.getReferenceById(meId);
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 주문을 찾을 수 없습니다."));
+
+        if(order.getMember() != member) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 주문 주문자가 아닙니다.");
+        }
+
+        return OrderResponseDto.builder().order(order).build();
+    }
 }
