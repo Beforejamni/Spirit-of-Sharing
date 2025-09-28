@@ -2,8 +2,10 @@ package com.finalproject.sos.domain.auth.service;
 
 import com.finalproject.sos.domain.auth.dto.request.SignInRequestDto;
 import com.finalproject.sos.domain.auth.dto.request.SignUpRequestDto;
+import com.finalproject.sos.domain.auth.dto.request.UpdatePasswordRequest;
 import com.finalproject.sos.domain.auth.entity.SignIn;
 import com.finalproject.sos.domain.auth.repository.SignInRepository;
+import com.finalproject.sos.domain.common.custom.CustomUserDetails;
 import com.finalproject.sos.domain.common.kakaoclient.KakaoLocalClient;
 import com.finalproject.sos.domain.common.util.JwtUtil;
 import com.finalproject.sos.domain.member.address.entity.MemberAddress;
@@ -129,7 +131,24 @@ public class AuthService {
         return tokenMap;
     }
 
+    @Transactional
+    public void updatePassword(CustomUserDetails userDetails, UpdatePasswordRequest updatePasswordRequest) {
 
+        String username = userDetails.getUsername();
 
+        SignIn me = signInRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."));
 
+        if(!passwordEncoder.matches(updatePasswordRequest.getCurrentPassword(), me.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        if(passwordEncoder.matches(updatePasswordRequest.getNewPassword(), me.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이전에 사용한 비밀번호 입니다.");
+        }
+
+        String encoded = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
+
+        me.updatePassword(encoded);
+    }
 }

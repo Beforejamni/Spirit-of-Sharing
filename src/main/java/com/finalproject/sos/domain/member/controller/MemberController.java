@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member/auth")
+@RequestMapping("/member/member")
 public class MemberController {
 
 

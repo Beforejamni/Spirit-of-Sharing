@@ -31,4 +31,8 @@ public class SignIn {
         this.username = username;
         this.password = password;
     }
+
+    public void updatePassword(String encoded) {
+        this.password = password;
+    }
 }

@@ -17,4 +17,6 @@ public interface SignInRepository extends JpaRepository<SignIn, Long> {
     //아이디로 Member와 SignIn 찾기
     @Query("select s from SignIn s join fetch s.member m where s.username = :username")
     Optional<SignIn> findWithMemberByUsername(@Param("username") String username);
+
+    Optional<SignIn> findByUsername(String username);
 }
